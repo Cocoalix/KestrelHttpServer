@@ -16,8 +16,18 @@ using Xunit;
 
 namespace Microsoft.AspNetCore.Server.Kestrel.FunctionalTests
 {
-    public class HttpProtocolSelectionTests
+    public class HttpProtocolSelectionTests : IDisposable
     {
+        public HttpProtocolSelectionTests()
+        {
+            AppContext.SetSwitch(ListenOptions.Http2ExperimentSwitch, isEnabled: true);
+        }
+
+        public void Dispose()
+        {
+            AppContext.SetSwitch(ListenOptions.Http2ExperimentSwitch, isEnabled: false);
+        }
+
         [Fact]
         public Task Server_NoProtocols_Error()
         {
